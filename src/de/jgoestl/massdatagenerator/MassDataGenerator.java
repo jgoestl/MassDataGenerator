@@ -94,6 +94,18 @@ public class MassDataGenerator {
         // Get values and validate
         String inputFilePath = cmd.getOptionValue("i");
         String outputPath = cmd.getOptionValue("output");
+        int numberOfData = getNumberOfData(cmd);
+        validate(inputFilePath, outputPath, numberOfData);
+        
+        // Read, generte and write Data
+        String inputString = null;
+        inputString = readInputFile(inputFilePath, inputString);
+        StringBuilder output = generateOutput(numberOfData, inputString);
+        writeOutput(outputPath, output);
+    }
+
+    
+    private static int getNumberOfData(CommandLine cmd) {
         int numberOfData = 0;
         try {
             numberOfData = Integer.parseInt(cmd.getOptionValue("count"));
@@ -106,6 +118,11 @@ public class MassDataGenerator {
             }
             System.exit(1);
         }
+        return numberOfData;
+    }
+    
+    
+    private static void validate(String inputFilePath, String outputPath, int numberOfData) {
         if(inputFilePath == null || outputPath == null) {
             System.out.println("Input- and Output-Path must not be null");
             try {
@@ -124,14 +141,9 @@ public class MassDataGenerator {
             }
             System.exit(1);
         }
-        
-        
-        String inputString = null;
-        inputString = readInputFile(inputFilePath, inputString);
-        StringBuilder output = generateOutput(numberOfData, inputString);
-        writeOutput(outputPath, output);
     }
 
+    
     private static String readInputFile(String inputFilePath, String inputString) {
         BufferedReader br = null;
         try {
@@ -164,6 +176,7 @@ public class MassDataGenerator {
         return inputString;
     }
     
+    
     private static StringBuilder generateOutput(int numberOfData, String inputString) {
         StringBuilder output = new StringBuilder();
         for(int i = 1; i <= numberOfData; i++) {
@@ -190,6 +203,7 @@ public class MassDataGenerator {
         return output;
     }
 
+    
     private static void writeOutput(String outputPath, StringBuilder output) {
         BufferedOutputStream bos = null;
         try {
@@ -215,6 +229,7 @@ public class MassDataGenerator {
             }
         }
     }
+    
     
     private static String getFormattedDate(Calendar cal) {
         Date time = cal.getTime();
