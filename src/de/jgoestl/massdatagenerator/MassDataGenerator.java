@@ -56,6 +56,7 @@ public class MassDataGenerator {
     private static final Pattern uuidPattern = Pattern.compile("#UUID#");
     private static final Pattern seqPattern = Pattern.compile("#SEQ#");
     private static final Pattern datePattern = Pattern.compile("#DATE#");
+    private static final String DEFAULT_DATE_FORMAT = "YYY-MM-d H:m:s.S";
 
     
     /**
@@ -67,6 +68,7 @@ public class MassDataGenerator {
         options.addOption("i", "input", true, "The input file");
         options.addOption("o", "output", true, "The output file");
         options.addOption("c", "count", true, "The number of generatet data");
+        options.addOption("d", "dateFormat", true, "A custom date format");
         options.addOption("h", "help", false, "Show this");
         
         CommandLineParser parser = new GnuParser();
@@ -79,7 +81,7 @@ public class MassDataGenerator {
         }
         
         // Show the help
-        if(cmd.hasOption("h") || !cmd.hasOption("i") || !cmd.hasOption("o") || !cmd.hasOption("c")) {
+        if(cmd.hasOption("help") || !cmd.hasOption("input") || !cmd.hasOption("output") || !cmd.hasOption("count")) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("massDataGenerator", options);
             
@@ -92,15 +94,16 @@ public class MassDataGenerator {
         }
         
         // Get values and validate
-        String inputFilePath = cmd.getOptionValue("i");
+        String inputFilePath = cmd.getOptionValue("input");
         String outputPath = cmd.getOptionValue("output");
         int numberOfData = getNumberOfData(cmd);
         validate(inputFilePath, outputPath, numberOfData);
+        DateFormat dateFormat = getDateFormat(cmd);
         
         // Read, generte and write Data
         String inputString = null;
         inputString = readInputFile(inputFilePath, inputString);
-        StringBuilder output = generateOutput(numberOfData, inputString);
+        StringBuilder output = generateOutput(numberOfData, inputString, dateFormat);
         writeOutput(outputPath, output);
     }
 
@@ -142,7 +145,24 @@ public class MassDataGenerator {
             System.exit(1);
         }
     }
-
+    
+    
+    private static DateFormat getDateFormat(CommandLine cmd) {
+        DateFormat dateFormat = null;
+        if(cmd.hasOption("dateFormat")) {
+            try {
+                dateFormat = new SimpleDateFormat(cmd.getOptionValue("dateFormat"));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid date format");
+                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, e);
+                System.exit(1);
+            }
+        } else {
+            dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        }
+        return dateFormat;
+    }
+    
     
     private static String readInputFile(String inputFilePath, String inputString) {
         BufferedReader br = null;
@@ -177,7 +197,7 @@ public class MassDataGenerator {
     }
     
     
-    private static StringBuilder generateOutput(int numberOfData, String inputString) {
+    private static StringBuilder generateOutput(int numberOfData, String inputString, DateFormat dateFormat) {
         StringBuilder output = new StringBuilder();
         for(int i = 1; i <= numberOfData; i++) {
             String part = inputString;
@@ -195,7 +215,7 @@ public class MassDataGenerator {
             Matcher dateMatcher = datePattern.matcher(part);
             if(dateMatcher.find()) {
                 Calendar now = Calendar.getInstance();
-                part = dateMatcher.replaceAll(getFormattedDate(now));
+                part = dateMatcher.replaceAll(getFormattedDate(now, dateFormat));
             }
             
             output.append(part).append("\r\n");
@@ -231,9 +251,8 @@ public class MassDataGenerator {
     }
     
     
-    private static String getFormattedDate(Calendar cal) {
+    private static String getFormattedDate(Calendar cal, DateFormat dateFormat) {
         Date time = cal.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("YYY-MM-d H:m:s.S");
         return dateFormat.format(time);
     }
     
