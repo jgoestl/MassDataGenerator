@@ -67,7 +67,7 @@ public class MassDataGenerator {
         Options options = new Options();
         options.addOption("i", "input", true, "The input file");
         options.addOption("o", "output", true, "The output file");
-        options.addOption("c", "count", true, "The number of generatet data");
+        options.addOption("c", "count", true, "The amount of generatet data");
         options.addOption("d", "dateFormat", true, "A custom date format");
         options.addOption("h", "help", false, "Show this");
         
