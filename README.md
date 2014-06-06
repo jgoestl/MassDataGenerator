@@ -12,13 +12,13 @@ The output can be customized with pattern. There is a pattern for random UUIDs, 
 Options
 --------
 
-| Short Option | Long Option  | Has Arguments | Description                  |
-| :----------: | ------------ | :-----------: | ---------------------------- |
-| __-c__       | --count      | *Yes*         | The amount of generatet data |
-| __-d__       | --dateFormat |	*Yes*         | A custom date format         |
-| __-h__       | --help       | *No*          |	Show the help                |
-| __-i__       | --input      |	*Yes*         | The input file               |
-| __-o__       | --output     | *Yes*         | The output file              |
+| Short Option | Long Option  | Mandatory | Has Arguments | Description                  |
+| :----------: | ------------ | :-------: | :-----------: | ---------------------------- |
+| __-c__       | --count      | *Yes*     | *Yes*         | The amount of generatet data |
+| __-d__       | --dateFormat |	*No*      | *Yes*         | A custom date format         |
+| __-h__       | --help       | *No*      | *No*          |	Show the help                |
+| __-i__       | --input      |	*Yes*     | *Yes*         | The input file               |
+| __-o__       | --output     | *Yes*     | *Yes*         | The output file              |
 
 
 Pattern
