@@ -57,6 +57,8 @@ public class MassDataGenerator {
     private static final Pattern seqPattern = Pattern.compile("#SEQ#");
     private static final Pattern datePattern = Pattern.compile("#DATE#");
     private static final String DEFAULT_DATE_FORMAT = "YYY-MM-d H:m:s.S";
+    
+    private static Logger logger = Logger.getLogger(MassDataGenerator.class.getName());
 
     
     /**
@@ -76,7 +78,7 @@ public class MassDataGenerator {
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException ex) {
-            Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             System.exit(1);
         }
         
@@ -117,7 +119,7 @@ public class MassDataGenerator {
             try {
                 System.in.read();
             } catch (IOException e) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, null, e);
             }
             System.exit(1);
         }
@@ -131,7 +133,7 @@ public class MassDataGenerator {
             try {
                 System.in.read();
             } catch (IOException ex) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
             System.exit(1);
         }
@@ -140,7 +142,7 @@ public class MassDataGenerator {
             try {
                 System.in.read();
             } catch (IOException ex) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
             System.exit(1);
         }
@@ -153,8 +155,8 @@ public class MassDataGenerator {
             try {
                 dateFormat = new SimpleDateFormat(cmd.getOptionValue("dateFormat"));
             } catch (IllegalArgumentException e) {
-                System.out.println("Invalid date format");
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, e);
+//                System.out.println("Invalid date format");
+                logger.log(Level.SEVERE, e.getMessage(), e);
                 System.exit(1);
             }
         } else {
@@ -180,17 +182,17 @@ public class MassDataGenerator {
             try {
                 System.in.read();
             } catch (IOException e) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, null, e);
             }
             System.exit(1);
         } catch (IOException ex) {
-            Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(br != null)
                     br.close();
             } catch (IOException ex) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
         return inputString;
@@ -235,25 +237,24 @@ public class MassDataGenerator {
             try {
                 System.in.read();
             } catch (IOException e) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, e);
+                logger.log(Level.SEVERE, null, e);
             }
             System.exit(1);
         } catch (IOException ex) {
-            Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(bos != null)
                     bos.close();
             } catch (IOException ex) {
-                Logger.getLogger(MassDataGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
     }
     
     
     private static String getFormattedDate(Calendar cal, DateFormat dateFormat) {
-        Date time = cal.getTime();
-        return dateFormat.format(time);
+        return dateFormat.format(cal.getTime());
     }
     
 }
