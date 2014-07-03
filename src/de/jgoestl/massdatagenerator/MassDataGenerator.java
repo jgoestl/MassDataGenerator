@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +57,7 @@ public class MassDataGenerator {
     private static final Pattern datePattern = Pattern.compile("#DATE#");
     private static final String DEFAULT_DATE_FORMAT = "YYY-MM-d H:m:s.S";
     
-    private static Logger logger = Logger.getLogger(MassDataGenerator.class.getName());
+    private static final Logger logger = Logger.getLogger(MassDataGenerator.class.getName());
 
     
     /**
@@ -115,7 +114,7 @@ public class MassDataGenerator {
         try {
             numberOfData = Integer.parseInt(cmd.getOptionValue("count"));
         } catch(NumberFormatException ex) {
-            System.out.println("Count must be a number");
+            logger.log(Level.SEVERE, "Count must be a number", ex);
             try {
                 System.in.read();
             } catch (IOException e) {
@@ -155,8 +154,7 @@ public class MassDataGenerator {
             try {
                 dateFormat = new SimpleDateFormat(cmd.getOptionValue("dateFormat"));
             } catch (IllegalArgumentException e) {
-//                System.out.println("Invalid date format");
-                logger.log(Level.SEVERE, e.getMessage(), e);
+                logger.log(Level.SEVERE, "Invalid date format", e);
                 System.exit(1);
             }
         } else {
@@ -178,7 +176,7 @@ public class MassDataGenerator {
             }
             inputString = inputStringBuilder.toString();
         } catch (FileNotFoundException ex) {
-            System.out.println("Input-File \"" + inputFilePath + "\" not found");
+            logger.log(Level.SEVERE, "Input-File \"" + inputFilePath + "\" not found", ex);
             try {
                 System.in.read();
             } catch (IOException e) {
@@ -233,7 +231,7 @@ public class MassDataGenerator {
             bos = new BufferedOutputStream(new FileOutputStream(f));
             bos.write(output.toString().getBytes());
         } catch (FileNotFoundException ex) {
-            System.out.println("Output-File \"" + outputPath + "\" not found");
+            logger.log(Level.SEVERE, "Output-File \"" + outputPath + "\" not found", ex);
             try {
                 System.in.read();
             } catch (IOException e) {
