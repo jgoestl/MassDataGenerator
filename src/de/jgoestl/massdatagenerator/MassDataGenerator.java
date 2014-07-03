@@ -169,11 +169,11 @@ public class MassDataGenerator {
     private static String readInputFile(String inputFilePath, String inputString) {
         BufferedReader br = null;
         try {
-            File input =new File(inputFilePath);
+            File input = new File(inputFilePath);
             br = new BufferedReader(new FileReader(input));
             StringBuilder inputStringBuilder = new StringBuilder();
-            char[] readBuffer = new char[1];
-            while(br.read(readBuffer) != -1) {
+            char[] readBuffer = new char[1024];
+            while(-1 != br.read(readBuffer)) {
                 inputStringBuilder.append(readBuffer);
             }
             inputString = inputStringBuilder.toString();
